@@ -26,6 +26,7 @@
 - Introduced modular routing architecture
 - Added API prefix `/api`
 - Swagger documentation grouping via tags
+- Added requirements.txt for reproducible installs
 
 ### Learned
 - How FastAPI routers work
