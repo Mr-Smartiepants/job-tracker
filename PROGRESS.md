@@ -18,3 +18,21 @@
 ### Next Step
 - Add configuration handling (environment variables)
 - Introduce PostgreSQL via Docker
+
+## 2026-03-04
+
+### Achieved
+- Refactored API structure to use FastAPI routers
+- Introduced modular routing architecture
+- Added API prefix `/api`
+- Swagger documentation grouping via tags
+
+### Learned
+- How FastAPI routers work
+- Difference between app instance and router
+- How to structure endpoints in larger projects
+
+### Next Steps
+- Introduce PostgreSQL database
+- Set up Docker container for database
+- Add SQLAlchemy for ORM layer
