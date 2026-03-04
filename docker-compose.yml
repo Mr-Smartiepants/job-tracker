@@ -1,0 +1,14 @@
+services:
+  db:
+    image: postgres:15
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: jobtracker
+      POSTGRES_PASSWORD: jobtracker
+      POSTGRES_DB: jobtracker
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:

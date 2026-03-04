@@ -37,3 +37,24 @@
 - Introduce PostgreSQL database
 - Set up Docker container for database
 - Add SQLAlchemy for ORM layer
+
+## 2026-03-04
+
+### Achieved
+- Added PostgreSQL database via Docker Compose
+- Created persistent database volume
+- Introduced SQLAlchemy engine and session factory
+- Implemented database router
+- Added `/api/database/health` endpoint
+- Verified database connectivity via SQL query
+
+### Learned
+- Docker Compose basics
+- Container naming conventions
+- Difference between SQLAlchemy engine and session
+- How to test database connectivity from FastAPI
+
+### Next Steps
+- Define first database models
+- Introduce SQLAlchemy declarative base
+- Create tables for job tracking domain (companies, applications)
