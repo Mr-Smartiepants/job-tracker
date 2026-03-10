@@ -58,3 +58,24 @@
 - Define first database models
 - Introduce SQLAlchemy declarative base
 - Create tables for job tracking domain (companies, applications)
+
+## 2026-03-10
+
+### Achieved
+- Introduced SQLAlchemy ORM models
+- Created `Company` database model
+- Implemented `CompanyCreate` API schema
+- Added `POST /api/companies` endpoint
+- Successfully persisted company data to PostgreSQL
+- Verified DB writes via Swagger and direct SQL query
+
+### Learned
+- Difference between ORM models and API schemas
+- SQLAlchemy session workflow (`add`, `commit`, `refresh`)
+- FastAPI request validation with Pydantic
+- Full request flow: API → Schema → Model → Database
+
+### Next Steps
+- Implement `GET /companies` endpoint
+- Introduce response schemas
+- Add relationship between companies and applications
