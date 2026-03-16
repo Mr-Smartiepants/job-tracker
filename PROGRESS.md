@@ -79,3 +79,27 @@
 - Implement `GET /companies` endpoint
 - Introduce response schemas
 - Add relationship between companies and applications
+
+## 2026-03-11
+
+### Achieved
+- Implemented full CRUD functionality for `Company`
+- Added `GET /api/companies` endpoint to retrieve all companies
+- Added `GET /api/companies/{company_id}` endpoint to retrieve a single company
+- Added `PATCH /api/companies/{company_id}` endpoint to update company data
+- Added `DELETE /api/companies/{company_id}` endpoint to remove companies
+- Introduced `CompanyUpdate` schema for partial updates
+- Verified update and delete operations via Swagger
+
+### Learned
+- Difference between `PUT` and `PATCH` in REST APIs
+- How to perform filtered queries with SQLAlchemy (`filter`, `first`)
+- How to update ORM objects and persist changes (`commit`, `refresh`)
+- How to safely delete database records with SQLAlchemy sessions
+- How CRUD operations map to HTTP methods in RESTful APIs
+
+### Next Steps
+- Design and implement the `Application` model
+- Introduce a relationship between `Company` and `Application`
+- Implement CRUD endpoints for job applications
+- Add response schemas for cleaner API responses
