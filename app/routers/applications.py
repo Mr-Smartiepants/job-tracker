@@ -3,6 +3,8 @@ from app.database.connection import SessionLocal
 from app.models.application import Application
 from app.schemas.application import ApplicationCreate
 from app.schemas.application import ApplicationUpdate
+from app.schemas.application import ApplicationRead
+from sqlalchemy.orm import joinedload
 
 router = APIRouter()
 
@@ -16,7 +18,7 @@ def create_application(application: ApplicationCreate):
             position=application.position,
             source=application.source,
             notes=application.notes,
-            status=application.status
+            status="applied"
         )
         db.add(db_application)
         db.commit()
@@ -26,23 +28,23 @@ def create_application(application: ApplicationCreate):
     finally:
         db.close()
 
-@router.get("/")
+@router.get("/", response_model=list[ApplicationRead])
 def get_applications():
     db = SessionLocal()
 
     try:
-        applications = db.query(Application).all()
+        applications = db.query(Application).options(joinedload(Application.company)).all()
         return applications
     
     finally:
         db.close()
 
-@router.get("/{application_id}")
+@router.get("/{application_id}", response_model=ApplicationRead)
 def get_application(application_id: int):
     db = SessionLocal()
 
     try:
-        application = db.query(Application).filter(Application.id == application_id).first()
+        application = db.query(Application).options(joinedload(Application.company)).filter(Application.id == application_id).first()
 
         if application is None:
             return {"error": "Application not found"}

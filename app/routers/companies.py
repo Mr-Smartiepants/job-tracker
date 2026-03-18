@@ -4,6 +4,7 @@ from app.models.company import Company
 from app.schemas.company import CompanyCreate
 from app.schemas.company import CompanyUpdate
 from app.models.application import Application
+from app.schemas.application import ApplicationRead
 
 router = APIRouter()
 
@@ -93,7 +94,7 @@ def update_company(company_id: int, company_update: CompanyUpdate):
     finally:
         db.close()
 
-@router.get("/{company_id}/applications")
+@router.get("/{company_id}/applications", response_model=list[ApplicationRead])
 def get_applications_for_company(company_id: int):
     db = SessionLocal()
 
@@ -103,7 +104,7 @@ def get_applications_for_company(company_id: int):
         if company is None:
             return {"error": "Company not found"}
         
-        applications = db.query(Application).filter(Application.company_id == company_id).all()
+        applications = db.query(Application).options(joinedload(Application.company)).filter(Application.company_id == company_id).all()
         return applications
     
     finally:

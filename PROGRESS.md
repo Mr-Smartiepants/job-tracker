@@ -129,3 +129,30 @@
 - Introduce proper error handling (HTTP status codes)
 - Add response schemas for cleaner API output
 - Improve data validation (e.g. status as Enum)
+
+## 2026-03-18
+
+### Achieved
+- Implemented basic frontend (`index.html`) served via FastAPI
+- Displayed applications dynamically using `fetch` and DOM manipulation
+- Integrated `GET /api/companies` into frontend (dropdown population)
+- Built application form for creating new entries
+- Implemented logic to:
+  - select existing company via dropdown
+  - create new company via `POST /api/companies`
+  - dynamically resolve `company_id` in frontend
+- Removed status from create flow and set default `"applied"` in backend
+- Fixed validation issue by making `location` optional in Company schema
+
+### Learned
+- How frontend and backend interact in a full request cycle
+- How Pydantic validation errors can break frontend logic
+- Difference between browser validation (`required`) and custom JS validation
+- Handling conditional workflows (existing vs new entity creation)
+- Importance of debugging full data flow (form → JS → API → DB)
+
+### Next Steps
+- Complete `POST /api/applications` integration in frontend
+- Reset form after successful submission
+- Reload application list after creating a new entry
+- Add status update via `PATCH` (UI dropdown per application)
