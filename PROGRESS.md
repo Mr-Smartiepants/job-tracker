@@ -103,3 +103,29 @@
 - Introduce a relationship between `Company` and `Application`
 - Implement CRUD endpoints for job applications
 - Add response schemas for cleaner API responses
+
+## 2026-03-18
+
+### Achieved
+- Implemented `Application` database model with foreign key to `Company`
+- Introduced relational structure (Company 1 → n Applications)
+- Added `ApplicationCreate` and `ApplicationUpdate` schemas
+- Implemented `POST /api/applications` endpoint
+- Implemented `GET /api/applications` endpoint
+- Implemented `GET /api/applications/{id}` endpoint
+- Implemented `PATCH /api/applications/{id}` endpoint
+- Implemented `GET /api/companies/{company_id}/applications` endpoint
+- Verified relational integrity via foreign key constraints
+
+### Learned
+- How to design and implement relational database models
+- How foreign keys enforce data integrity
+- How to structure APIs beyond basic CRUD (resource relationships)
+- Early return pattern for cleaner control flow
+- Difference between querying by primary key vs foreign key
+
+### Next Steps
+- Implement `DELETE /api/applications/{id}`
+- Introduce proper error handling (HTTP status codes)
+- Add response schemas for cleaner API output
+- Improve data validation (e.g. status as Enum)
