@@ -83,6 +83,34 @@
             text-transform: capitalize;
         }
 
+        .status-select {
+            width: auto;
+            min-width: 120px;
+            padding: 6px 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .status-select.applied {
+            background-color: #e3f2fd;
+            color: #0d47a1;
+        }
+
+        .status-select.interview {
+            background-color: #fff8e1;
+            color: #e65100;
+        }
+
+        .status-select.offer {
+            background-color: #e8f5e9;
+            color: #1b5e20;
+        }
+
+        .status-select.rejected {
+            background-color: #ffebee;
+            color: #b71c1c;
+        }
         .status.applied {
             background-color: #e5e7eb;
             color: #374151;
@@ -136,6 +164,45 @@
         .form-section h3 {
             margin-top: 0;
             margin-bottom: 10px;
+        }
+        .rejected-card {
+            opacity: 0.6;
+            filter: grayscale(40%);
+        }
+        .stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            padding: 10px 14px;
+            border-radius: 10px;
+            background-color: #f5f5f5;
+            font-weight: 600;
+        }
+
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .filter-btn {
+            padding: 8px 14px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: white;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .filter-btn.active {
+            background-color: #333;
+            color: white;
+            border-color: #333;
         }
 
     </style>
@@ -203,6 +270,23 @@
     <!-- APPLICATION LIST -->
     <div class="card">
         <h2>Applications</h2>
+
+        <div id="application-stats" class="stats">
+        <div class="stat-card">Total: <span id="stat-total">0</span></div>
+        <div class="stat-card">Open: <span id="stat-open">0</span></div>
+        <div class="stat-card">Interview: <span id="stat-interview">0</span></div>
+        <div class="stat-card">Offer: <span id="stat-offer">0</span></div>
+        <div class="stat-card">Rejected: <span id="stat-rejected">0</span></div>
+    </div>
+        <div id="application-filters" class="filters">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="active">Active</button>
+        <button class="filter-btn" data-filter="applied">Applied</button>
+        <button class="filter-btn" data-filter="interview">Interview</button>
+        <button class="filter-btn" data-filter="offer">Offer</button>
+        <button class="filter-btn" data-filter="rejected">Rejected</button>
+    </div>
+
         <div id="applications">Loading...</div>
     </div>
 
@@ -223,28 +307,125 @@
             newLocation.disabled = false;
         }
     }
+
+    let currentFilter = "all";
+
     async function loadApplications() {
         const response = await fetch("/api/applications");
         const applications = await response.json();
 
+        const totalCount = applications.length;
+        const openCount = applications.filter(app =>
+            app.status !== "rejected" && app.status !== "offer"
+        ).length;
+        const interviewCount = applications.filter(app => app.status === "interview").length;
+        const offerCount = applications.filter(app => app.status === "offer").length;
+        const rejectedCount = applications.filter(app => app.status === "rejected").length;
+
+        document.getElementById("stat-total").textContent = totalCount;
+        document.getElementById("stat-open").textContent = openCount;
+        document.getElementById("stat-interview").textContent = interviewCount;
+        document.getElementById("stat-offer").textContent = offerCount;
+        document.getElementById("stat-rejected").textContent = rejectedCount;
+        
+        applications.sort((a, b) => {
+            if (a.status === "rejected" && b.status !== "rejected") return 1;
+            if (a.status !== "rejected" && b.status === "rejected") return -1;
+            return 0;
+        });
+
+        let filteredApplications = applications;
+
+        if (currentFilter === "active") {
+            filteredApplications = applications.filter(app => app.status !== "rejected");
+        } else if (currentFilter !== "all") {
+            filteredApplications = applications.filter(app => app.status === currentFilter);
+        }
+
         const container = document.getElementById("applications");
         container.innerHTML = "";
 
-        applications.forEach(app => {
+        function formatDate(dateString) {
+            return new Date(dateString).toLocaleDateString("de-DE");
+        }
+
+        filteredApplications.forEach(app => {
             const div = document.createElement("div");
             div.classList.add("application");
 
+            if (app.status === "rejected") {
+                div.classList.add("rejected-card");
+            }
            div.innerHTML = `
-            <div class="company">${app.company.name}</div>
-            <div><strong>Position:</strong> ${app.position}</div>
-            <div><strong>Source:</strong> ${app.source ?? "-"}</div>
-            <div class="status ${app.status}">${app.status.replace("_", " ")}</div>
-        `;
+                <div class="company">${app.company.name}</div>
+                <div><strong>Position:</strong> ${app.position}</div>
+                <div><strong>Applied:</strong> ${formatDate(app.applied_at)}</div>
+                <div><strong>Source:</strong> ${app.source ?? "-"}</div>
+
+                <div>
+                    <strong>Status:</strong>
+                    <select class="status-select ${app.status}" data-id="${app.id}" data-previous-value="${app.status}">
+                        <option value="applied" ${app.status === "applied" ? "selected" : ""}>applied</option>
+                        <option value="interview" ${app.status === "interview" ? "selected" : ""}>interview</option>
+                        <option value="offer" ${app.status === "offer" ? "selected" : ""}>offer</option>
+                        <option value="rejected" ${app.status === "rejected" ? "selected" : ""}>rejected</option>
+                    </select>
+                </div>
+            `;
 
             container.appendChild(div);
         });
     }
 
+        document.addEventListener("change", async (event) => {
+            if (event.target.classList.contains("status-select")) {
+                const select = event.target;
+                const applicationId = select.dataset.id;
+                const oldValue = select.dataset.previousValue;
+                const newStatus = select.value;
+
+                try {
+                    const response = await fetch(`/api/applications/${applicationId}`, {
+                        method: "PATCH",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            status: newStatus
+                        })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error("Update failed");
+                    }
+
+                    await loadApplications();
+
+                } catch (error) {
+                    console.error("Error updating status:", error);
+
+                    // Wert zurücksetzen, falls Fehler
+                    select.value = oldValue;
+
+                    alert("Status konnte nicht gespeichert werden.");
+                }
+            }
+        });
+
+        document.addEventListener("click", async (event) => {
+            if (event.target.classList.contains("filter-btn")) {
+                const selectedFilter = event.target.dataset.filter;
+                currentFilter = selectedFilter;
+
+                document.querySelectorAll(".filter-btn").forEach(button => {
+                    button.classList.remove("active");
+                });
+
+                event.target.classList.add("active");
+
+                await loadApplications();
+            }
+        });
     async function loadCompanies() {
         const response = await fetch("/api/companies");
         const companies = await response.json();

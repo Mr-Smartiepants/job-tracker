@@ -160,30 +160,47 @@
 ## 2026-03-30
 
 ### Achieved
+
 - Introduced improved frontend layout with structured sections (Company / Application Details)
 - Implemented card-based UI for form and application list
-- Added styled status badges with color coding
-- Implemented dynamic company dropdown via `/api/companies`
-- Added support for creating new companies directly from the application form
-- Implemented conditional form logic:
-  - disable new company fields when existing company is selected
-- Improved UX with:
-  - helper text for company selection
-  - visual separation using "or" divider
-  - grouped form sections for clarity
-- Connected frontend form to backend:
-  - dynamic company resolution
-  - successful creation of applications via API
+- Added styled status dropdown with dynamic color coding
+- Enabled inline status updates via `PATCH /api/applications/{id}`
+- Implemented immediate UI refresh after status change
+- Added sorting logic:
+
+  - rejected applications are moved to the bottom
+- Added visual distinction for rejected applications:
+
+  - reduced opacity and partial grayscale
+- Displayed application date (`applied_at`) in list view
+- Implemented application statistics dashboard:
+
+  - Total, Open, Interview, Offer, Rejected
+- Introduced filter system:
+
+  - All, Active, Applied, Interview, Offer, Rejected
+  - dynamic filtering without page reload
+- Improved state handling in frontend:
+
+  - centralized rendering via `loadApplications()`
+  - reduced duplicate UI logic
 
 ### Learned
-- How to structure frontend UI for clarity and usability (form grouping, sections)
-- How to synchronize UI state with user input (enable/disable fields)
-- Importance of guiding user flow through visual cues
-- How to integrate frontend logic with backend endpoints in a real workflow
-- UX insight: clear separation of responsibilities improves usability
+
+- How to manage UI state through a single rendering function
+- Benefits of separating data logic (API) from presentation logic (frontend)
+- How to implement dynamic filtering and sorting in frontend applications
+- Importance of immediate visual feedback for user actions
+- How small UX improvements (color, grouping, ordering) significantly increase usability
+- Why partial updates (PATCH) should use optional fields in schemas
 
 ### Next Steps
-- Implement inline status updates via `PATCH /api/applications/{id}`
-- Add dropdown for status directly in application list
-- Improve error handling in frontend (user feedback on failed requests)
-- Optional: add delete functionality (`DELETE /api/applications/{id}`)
+
+- Implement status history tracking:
+
+  - create `application_status_history` table
+  - log every status change with timestamp
+- Display "last status change" in UI
+- Add expandable history view per application
+- Improve error handling UX (replace alert with inline feedback or toast)
+- Optional: refine UI styling (status colors in stats, spacing, hierarchy)
