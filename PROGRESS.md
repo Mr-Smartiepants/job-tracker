@@ -156,3 +156,34 @@
 - Reset form after successful submission
 - Reload application list after creating a new entry
 - Add status update via `PATCH` (UI dropdown per application)
+
+## 2026-03-30
+
+### Achieved
+- Introduced improved frontend layout with structured sections (Company / Application Details)
+- Implemented card-based UI for form and application list
+- Added styled status badges with color coding
+- Implemented dynamic company dropdown via `/api/companies`
+- Added support for creating new companies directly from the application form
+- Implemented conditional form logic:
+  - disable new company fields when existing company is selected
+- Improved UX with:
+  - helper text for company selection
+  - visual separation using "or" divider
+  - grouped form sections for clarity
+- Connected frontend form to backend:
+  - dynamic company resolution
+  - successful creation of applications via API
+
+### Learned
+- How to structure frontend UI for clarity and usability (form grouping, sections)
+- How to synchronize UI state with user input (enable/disable fields)
+- Importance of guiding user flow through visual cues
+- How to integrate frontend logic with backend endpoints in a real workflow
+- UX insight: clear separation of responsibilities improves usability
+
+### Next Steps
+- Implement inline status updates via `PATCH /api/applications/{id}`
+- Add dropdown for status directly in application list
+- Improve error handling in frontend (user feedback on failed requests)
+- Optional: add delete functionality (`DELETE /api/applications/{id}`)

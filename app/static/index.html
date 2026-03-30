@@ -4,60 +4,225 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Job Tracker</title>
+
     <style>
-    form div {
-        margin-bottom: 10px;
-    }
-</style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        .card h2 {
+            margin-top: 0;
+        }
+
+        form div {
+            margin-bottom: 12px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 6px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .application {
+            border-bottom: 1px solid #eee;
+            padding: 14px 0;
+        }
+
+        .application:last-child {
+            border-bottom: none;
+        }
+
+        .company {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 6px;
+        }
+
+        .status {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: capitalize;
+        }
+
+        .status.applied {
+            background-color: #e5e7eb;
+            color: #374151;
+        }
+
+        .status.interview {
+            background-color: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .status.rejected {
+            background-color: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .status.offer {
+            background-color: #dcfce7;
+            color: #15803d;
+        }
+
+        .status.response_received {
+            background-color: #fef3c7;
+            color: #b45309;
+        }
+
+        input:disabled {
+            background-color: #f0f0f0;
+            cursor: not-allowed;
+        }
+        .helper-text {
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .or-divider {
+            text-align: center;
+            font-weight: bold;
+            color: #6b7280;
+            margin: 16px 0;
+        }
+        .form-section {
+            border-top: 1px solid #e5e7eb;
+            padding-top: 16px;
+            margin-top: 16px;
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .form-section h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+    </style>
 </head>
 <body>
+
+<div class="container">
+
     <h1>Job Application Tracker</h1>
 
-    <h2>Add Application</h2>
+    <!-- FORM -->
+    <form id="application-form">
 
-<form id="application-form">
+            <!-- COMPANY SECTION -->
+            <div class="form-section">
+                <h3>Company</h3>
 
-    <div>
-        <label for="company">Company:</label>
-        <select id="company" name="company">
-            <option value="">Select a company</option>
-        </select>
+                <p class="helper-text">Select an existing company or create a new one below.</p>
+
+                <div>
+                    <label>Existing Company:</label>
+                    <select id="company"></select>
+                </div>
+
+                <div class="or-divider">or</div>
+
+                <div>
+                    <label>New Company Name:</label>
+                    <input type="text" id="new_company_name">
+                </div>
+
+                <div>
+                    <label>New Company Location:</label>
+                    <input type="text" id="new_company_location">
+                </div>
+            </div>
+
+            <!-- APPLICATION SECTION -->
+            <div class="form-section">
+                <h3>Application Details</h3>
+
+                <div>
+                    <label>Position:</label>
+                    <input type="text" id="position" required>
+                </div>
+
+                <div>
+                    <label>Source:</label>
+                    <input type="text" id="source">
+                </div>
+
+                <div>
+                    <label>Notes:</label>
+                    <textarea id="notes"></textarea>
+                </div>
+            </div>
+
+            <div>
+                <button type="submit">Add Application</button>
+            </div>
+
+        </form>
     </div>
 
-    <div>
-        <label for="new_company_name">New Company Name:</label>
-        <input type="text" id="new_company_name" name="new_company_name">
+    <!-- APPLICATION LIST -->
+    <div class="card">
+        <h2>Applications</h2>
+        <div id="applications">Loading...</div>
     </div>
 
-    <div>
-        <label for="new_company_location">New Company Location:</label>
-        <input type="text" id="new_company_location" name="new_company_location">
-    </div>
+</div>
 
-    <div>
-        <label for="position">Position:</label>
-        <input type="text" id="position" name="position" required>
-    </div>
+<script>
+    
+    function toggleCompanyInputs() {
+        const companySelect = document.getElementById("company");
+        const newName = document.getElementById("new_company_name");
+        const newLocation = document.getElementById("new_company_location");
 
-    <div>
-        <label for="source">Source:</label>
-        <input type="text" id="source" name="source">
-    </div>
-
-    <div>
-        <label for="notes">Notes:</label>
-        <textarea id="notes" name="notes"></textarea>
-    </div>
-
-    <div>
-        <button type="submit">Add Application</button>
-    </div>
-
-</form>
-
-<hr>
-    <div id="applications">
-        <script>
+        if (companySelect.value) {
+            newName.disabled = true;
+            newLocation.disabled = true;
+        } else {
+            newName.disabled = false;
+            newLocation.disabled = false;
+        }
+    }
     async function loadApplications() {
         const response = await fetch("/api/applications");
         const applications = await response.json();
@@ -65,18 +230,21 @@
         const container = document.getElementById("applications");
         container.innerHTML = "";
 
-        applications.forEach(application => {
-            const item = document.createElement("div");
-            item.innerHTML = `
-                <h3>${application.company.name}</h3>
-                <p><strong>Position:</strong> ${application.position}</p>
-                <p><strong>Status:</strong> ${application.status}</p>
-                <p><strong>Source:</strong> ${application.source ?? "-"}</p>
-                <hr>
-            `;
-            container.appendChild(item);
+        applications.forEach(app => {
+            const div = document.createElement("div");
+            div.classList.add("application");
+
+           div.innerHTML = `
+            <div class="company">${app.company.name}</div>
+            <div><strong>Position:</strong> ${app.position}</div>
+            <div><strong>Source:</strong> ${app.source ?? "-"}</div>
+            <div class="status ${app.status}">${app.status.replace("_", " ")}</div>
+        `;
+
+            container.appendChild(div);
         });
     }
+
     async function loadCompanies() {
         const response = await fetch("/api/companies");
         const companies = await response.json();
@@ -84,16 +252,17 @@
         const select = document.getElementById("company");
         select.innerHTML = '<option value="">Select a company</option>';
 
-    companies.forEach(company => {
-        const option = document.createElement("option");
-        option.value = company.id;
-        option.textContent = company.name;
-        select.appendChild(option);
+        companies.forEach(c => {
+            const option = document.createElement("option");
+            option.value = c.id;
+            option.textContent = c.name;
+            select.appendChild(option);
         });
     }
+    document.getElementById("company").addEventListener("change", toggleCompanyInputs);
 
     document.getElementById("application-form").addEventListener("submit", async function (event) {
-    event.preventDefault();
+        event.preventDefault();
 
         const companyId = document.getElementById("company").value;
         const newCompanyName = document.getElementById("new_company_name").value.trim();
@@ -102,25 +271,12 @@
         const source = document.getElementById("source").value.trim();
         const notes = document.getElementById("notes").value.trim();
 
-        // debug
-
-        console.log("companyId:", companyId);
-        console.log("newCompanyName:", newCompanyName);
-        console.log("newCompanyName length:", newCompanyName.length);
-        console.log("newCompanyLocation:", newCompanyLocation);
-
-        
         let finalCompanyId = companyId;
-        
-        //debug
-        console.log("if check:", !finalCompanyId && newCompanyName);
 
         if (!finalCompanyId && newCompanyName) {
             const companyResponse = await fetch("/api/companies", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
+                headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({
                     name: newCompanyName,
                     location: newCompanyLocation || null
@@ -132,16 +288,31 @@
         }
 
         if (!finalCompanyId) {
-            alert("Please select an existing company or enter a new company name.");
+            alert("Please select or create a company");
             return;
         }
 
-        console.log("finalCompanyId:", finalCompanyId);
-            });
+        await fetch("/api/applications", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+                company_id: finalCompanyId,
+                position: position,
+                source: source || null,
+                notes: notes || null
+            })
+        });
 
-    loadCompanies();
+        await loadApplications();
+        await loadCompanies();
+        event.target.reset();
+        toggleCompanyInputs();
+
+    });
+
     loadApplications();
+    loadCompanies();
 </script>
-    </div>
+
 </body>
 </html>

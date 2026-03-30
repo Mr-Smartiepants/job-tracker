@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">32
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Tracker</title>
+    <style>
+    form div {
+        margin-bottom: 10px;
+    }
+</style>
+</head>
+<body>
+    <h1>Job Application Tracker</h1>
+
+    <h2>Add Application</h2>
+
+<form id="application-form">
+
+    <div>
+        <label for="company">Company:</label>
+        <select id="company" name="company">
+            <option value="">Select a company</option>
+        </select>
+    </div>
+
+    <div>
+        <label for="new_company_name">New Company Name:</label>
+        <input type="text" id="new_company_name" name="new_company_name">
+    </div>
+
+    <div>
+        <label for="new_company_location">New Company Location:</label>
+        <input type="text" id="new_company_location" name="new_company_location">
+    </div>
+
+    <div>
+        <label for="position">Position:</label>
+        <input type="text" id="position" name="position" required>
+    </div>
+
+    <div>
+        <label for="source">Source:</label>
+        <input type="text" id="source" name="source">
+    </div>
+
+    <div>
+        <label for="notes">Notes:</label>
+        <textarea id="notes" name="notes"></textarea>
+    </div>
+
+    <div>
+        <button type="submit">Add Application</button>
+    </div>
+
+</form>
+
+<hr>
+    <div id="applications">
+        <script>
+    async function loadApplications() {
+        const response = await fetch("/api/applications");
+        const applications = await response.json();
+
+        const container = document.getElementById("applications");
+        container.innerHTML = "";
+
+        applications.forEach(application => {
+            const item = document.createElement("div");
+            item.innerHTML = `
+                <h3>${application.company.name}</h3>
+                <p><strong>Position:</strong> ${application.position}</p>
+                <p><strong>Status:</strong> ${application.status}</p>
+                <p><strong>Source:</strong> ${application.source ?? "-"}</p>
+                <hr>
+            `;
+            container.appendChild(item);
+        });
+    }
+    async function loadCompanies() {
+        const response = await fetch("/api/companies");
+        const companies = await response.json();
+
+        const select = document.getElementById("company");
+        select.innerHTML = '<option value="">Select a company</option>';
+
+    companies.forEach(company => {
+        const option = document.createElement("option");
+        option.value = company.id;
+        option.textContent = company.name;
+        select.appendChild(option);
+        });
+    }
+
+    document.getElementById("application-form").addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+        const companyId = document.getElementById("company").value;
+        const newCompanyName = document.getElementById("new_company_name").value.trim();
+        const newCompanyLocation = document.getElementById("new_company_location").value.trim();
+        const position = document.getElementById("position").value.trim();
+        const source = document.getElementById("source").value.trim();
+        const notes = document.getElementById("notes").value.trim();
+
+        // debug
+
+        console.log("companyId:", companyId);
+        console.log("newCompanyName:", newCompanyName);
+        console.log("newCompanyName length:", newCompanyName.length);
+        console.log("newCompanyLocation:", newCompanyLocation);
+
+        
+        let finalCompanyId = companyId;
+        
+        //debug
+        console.log("if check:", !finalCompanyId && newCompanyName);
+
+        if (!finalCompanyId && newCompanyName) {
+            const companyResponse = await fetch("/api/companies", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    name: newCompanyName,
+                    location: newCompanyLocation || null
+                })
+            });
+
+            const newCompany = await companyResponse.json();
+            finalCompanyId = newCompany.id;
+        }
+
+        if (!finalCompanyId) {
+            alert("Please select an existing company or enter a new company name.");
+            return;
+        }
+
+        console.log("finalCompanyId:", finalCompanyId);
+            });
+
+    loadCompanies();
+    loadApplications();
+</script>
+    </div>
+</body>
+</html>

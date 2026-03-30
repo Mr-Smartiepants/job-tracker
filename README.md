@@ -39,10 +39,74 @@ Returns:
 - PostgreSQL integration
 - Docker containerization
 
-## Run locally
+
+## 🚀 Getting Started
+
+Follow these steps to run the Job Tracker locally.
+
+### 1. Navigate to the project directory
 
 ```bash
-python -m venv venv
+cd job-tracker
+````
+
+### 2. Activate virtual environment
+
+```bash
 source venv/bin/activate
-pip install -r requirements.txt
+```
+
+### 3. Start the database (Docker)
+
+```bash
+docker compose up -d
+```
+
+Optional: Check if the container is running
+
+```bash
+docker compose ps
+```
+
+### 4. Start the FastAPI server
+
+```bash
 uvicorn app.main:app --reload
+```
+
+### 5. Open in browser
+
+Frontend:
+[http://127.0.0.1:8000/](http://127.0.0.1:8000/)
+
+API docs (Swagger):
+[http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+
+## 🛑 Stopping the application
+
+Stop FastAPI server:
+
+```bash
+CTRL + C
+```
+
+Stop Docker containers:
+
+```bash
+docker compose down
+```
+
+## 🧠 Notes
+
+* Make sure Docker is running before starting the database
+* The database data is persisted via Docker volumes
+* The `--reload` flag automatically restarts the server on code changes
+
+```
+
+---
+
+Jetzt hast du **ein einziges, sauberes Markdown-Stück**, das direkt in deine README passt.
+
+Wenn du willst, machen wir als nächstes den oberen Teil deiner README richtig stark (Projektbeschreibung + Features), damit das Ding auch für Bewerbungen richtig knallt.
+```
